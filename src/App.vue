@@ -61,6 +61,10 @@ export default {
           label: "运营"
         },
         {
+          value: "design",
+          label: "设计"
+        },
+        {
           value: "others",
           label: "其他"
         }
@@ -76,6 +80,13 @@ export default {
     };
   },
   methods: {
+    resetForm() {
+      this.daterange = "";
+      this.event.title = "";
+      this.event.start = "";
+      this.event.end = "";
+      this.event.cssClass = "";
+    },
     async handleSubmit() {
       const [start, end] = this.daterange;
       const Events = AV.Object.extend("events");
@@ -93,12 +104,14 @@ export default {
             message: "添加成功",
             type: "success"
           });
+          this.resetForm();
         }
       } catch (e) {
         this.$message({
           message: "好像出了点问题,添加失败啦!",
           type: "error"
         });
+        this.resetForm();
         console.log(error);
       }
     },
@@ -161,6 +174,9 @@ export default {
 }
 .operation {
   background-color: #dcf2ff !important;
+}
+.design {
+  background-color: #eaeaf9 !important;
 }
 .others {
   background-color: #fcdccc !important;
