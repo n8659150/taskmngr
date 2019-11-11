@@ -121,7 +121,7 @@
       },
       moreTitle (date) {
         let dt = new Date(date)
-        return this.weekNames[dt.getDay()] + ', ' + this.monthNames[dt.getMonth()] + dt.getDate()
+        return `${this.monthNames[dt.getMonth()]}${dt.getDate()}日`
       },
       classNames (cssClass) {
         if(!cssClass) return ''
