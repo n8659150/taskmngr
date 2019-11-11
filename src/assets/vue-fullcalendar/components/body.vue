@@ -103,7 +103,6 @@
     },
     watch : {
       weekNames (val) {
-        console.log('watch weekNames', val)
       }
     },
     computed : {
@@ -185,7 +184,6 @@
           let dt = new Date(day.start)
           let st = new Date(dt.getFullYear(),dt.getMonth(),dt.getDate())
           let ed = day.end ? new Date(day.end) : st
-          // console.log('slotEvt', st, ed, date)
           return date>=st && date<=ed
         })
 
@@ -269,8 +267,6 @@
   .dates {
     position:relative;
     .week-row{
-      // width: 100%;
-      // position:absolute;
       border-left:1px solid #e0e0e0;
       display: flex;
       .day-cell{
@@ -331,13 +327,9 @@
               text-overflow: ellipsis;
               &.is-start{
                 margin-left: 4px;
-                // border-top-left-radius:4px;
-                // border-bottom-left-radius:4px;
               }
               &.is-end{
                 margin-right: 4px;
-                // border-top-right-radius:4px;
-                // border-bottom-right-radius:4px;
               }
               &.is-opacity{
                 opacity: 0;
@@ -345,7 +337,6 @@
             }
             .more-link{
               cursor: pointer;
-              // text-align: right;
               padding-left: 8px;
               padding-right: 2px;
               color: rgba(0,0,0,.38);

@@ -1,6 +1,8 @@
 <template>
   <div class="main-wrapper">
-    <el-button type="primary" @click="dialogVisible = true">添加</el-button>
+    <div class="add">
+      <el-button @click="dialogVisible = true" plain size="small">新 增</el-button>
+    </div>
     <full-calendar
       :events="monthData"
       class="test-fc"
@@ -70,41 +72,35 @@ export default {
         end: "",
         cssClass: ""
       },
-      monthData: [
-        {
-          title: "首页开发", // 事件内容
-          start: "2019-11-11", // 事件开始时间
-          end: "2019-11-30", // 事件结束时间
-          cssClass: "development" // 事件的样式   class名（由后台返回数据）  red为自己定义的class名
-        },
-        {
-          title: "倾诉页开发",
-          start: "2019-11-25",
-          end: "2019-11-30",
-          cssClass: "operation"
-        },
-        {
-          title: "关于我们开发",
-          start: "2019-11-09",
-          end: "2019-11-11",
-          cssClass: "others"
-        },
-        {
-          title: "后台开发",
-          start: "2019-11-20",
-          end: "2019-11-30",
-          cssClass: "product"
-        }
-      ]
+      monthData: []
     };
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       const [start, end] = this.daterange;
-      this.event.start = start;
-      this.event.end = end;
-      this.monthData.push(this.event);
+      const Events = AV.Object.extend("events");
+      const event = new Events();
+      event.set("title", this.event.title);
+      event.set("start", start);
+      event.set("end", end);
+      event.set("cssClass", this.event.cssClass);
       this.dialogVisible = false;
+      try {
+        const newEvent = await event.save();
+        if (newEvent) {
+          this.monthData.push(newEvent.attributes);
+          this.$message({
+            message: "添加成功",
+            type: "success"
+          });
+        }
+      } catch (e) {
+        this.$message({
+          message: "好像出了点问题,添加失败啦!",
+          type: "error"
+        });
+        console.log(error);
+      }
     },
     // 选择月份
     changeMonth(start, end, current) {
@@ -123,6 +119,15 @@ export default {
       console.log("moreCLick", day, events, jsEvent);
     }
   },
+  async mounted() {
+    let query = new AV.Query("events");
+    query.descending("createdAt");
+
+    const events = await query.find();
+    events.map(event => {
+      this.monthData.push(event.attributes);
+    });
+  },
   components: {
     "full-calendar": FullCalendar
   }
@@ -130,9 +135,15 @@ export default {
 </script>
 <style>
 .main-wrapper {
-  max-width: 960px;
-  width: 960px;
+  max-width: 1000px;
+  width: 1000px;
   margin: 0 auto;
+}
+.add {
+  display: flex;
+  justify-content: flex-end;
+  width: 95%;
+  margin-top: 25px;
 }
 .input-group {
   width: 70%;
